@@ -8,7 +8,7 @@ services:
     dockerContext: .
     dockerfilePath: Dockerfile
     autoDeploy: true
-    healthCheckPath: /api/v1/auth/me
+    healthCheckPath: /api/v1/health
     envVars:
       - key: PORT
         value: 10000
