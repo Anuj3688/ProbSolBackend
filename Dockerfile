@@ -20,24 +20,30 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-# Create a non-root system user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
+# Create non-root user and data directory with write permissions for SQLite
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup && \
+    mkdir -p /app/data && \
+    chown -R appuser:appgroup /app
 
 # Copy executable jar from builder stage
 COPY --from=builder /app/target/probsol-backend-*.jar app.jar
+RUN chown appuser:appgroup app.jar
+
+# Switch to non-root user
+USER appuser
 
 # Render assigns dynamic $PORT (default fallback to 8080)
 ENV PORT=8080
+ENV DB_FILE_PATH=/app/data/probsol.db
 EXPOSE ${PORT}
 
 # Memory tuning for Render Free Tier (strict 512MB RAM cap):
-# -XX:+UseContainerSupport: respects cgroup memory limits
-# -Xmx256m: max heap capped at 256MB to avoid container OOM
-# -Xms128m: initial heap
-# -Xss256k: reduces thread stack footprint
-# -XX:MaxMetaspaceSize=128m: protects against metaspace growth
-# -XX:+ExitOnOutOfMemoryError: fails fast if memory is exhausted
+# -XX:+UseContainerSupport: respects container cgroup memory limits
+# -Xmx256m: maximum heap allocation capped at 256MB
+# -Xms128m: initial heap allocation
+# -Xss256k: reduces thread stack footprint from default 1MB
+# -XX:MaxMetaspaceSize=128m: prevents non-heap metaspace leaks
+# -XX:+ExitOnOutOfMemoryError: triggers clean container restart on OOM
 ENTRYPOINT ["java", \
   "-XX:+UseContainerSupport", \
   "-Xmx256m", \

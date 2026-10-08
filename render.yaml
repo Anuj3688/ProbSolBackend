@@ -12,6 +12,8 @@ services:
     envVars:
       - key: PORT
         value: 10000
+      - key: DB_FILE_PATH
+        value: "/app/data/probsol.db"
       - key: CORS_ALLOWED_ORIGINS
         value: "http://localhost:3000,http://localhost:5173"
       - key: JWT_SECRET
