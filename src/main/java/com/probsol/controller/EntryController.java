@@ -9,6 +9,8 @@ import com.probsol.dto.response.EntryResponse;
 import com.probsol.dto.response.EntryStatusResponse;
 import com.probsol.security.UserPrincipal;
 import com.probsol.service.EntryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/entries")
+@Tag(name = "Entries", description = "Endpoints for managing problem and solution notes")
 public class EntryController {
 
     private final EntryService entryService;
@@ -26,6 +29,7 @@ public class EntryController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new problem or solution entry")
     public ResponseEntity<ApiResponse<EntryResponse>> createEntry(
             @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody CreateEntryRequest request) {
@@ -34,6 +38,7 @@ public class EntryController {
     }
 
     @GetMapping
+    @Operation(summary = "Search, filter, and paginate entries")
     public ResponseEntity<ApiResponse<EntriesListResponse>> listEntries(
             @AuthenticationPrincipal UserPrincipal principal,
             @RequestParam(required = false) String q,
@@ -54,6 +59,7 @@ public class EntryController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get single entry by ID")
     public ResponseEntity<ApiResponse<EntryResponse>> getEntryById(
             @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable String id) {
@@ -62,6 +68,7 @@ public class EntryController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Update entry fields")
     public ResponseEntity<ApiResponse<EntryResponse>> updateEntry(
             @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable String id,
@@ -71,6 +78,7 @@ public class EntryController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Update status of an entry (OPEN or SOLVED)")
     public ResponseEntity<ApiResponse<EntryStatusResponse>> updateStatus(
             @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable String id,
@@ -80,6 +88,7 @@ public class EntryController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Soft delete an entry")
     public ResponseEntity<ApiResponse<Void>> deleteEntry(
             @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable String id) {

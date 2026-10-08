@@ -23,6 +23,22 @@ The server starts on port `8080`: `http://localhost:8080`.
 
 ---
 
+## 📖 Swagger / OpenAPI Documentation
+
+Interactive Swagger UI documentation is available directly in the browser:
+
+- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **OpenAPI JSON**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+> **Testing Protected Endpoints in Swagger**:
+> 1. Call `POST /api/v1/auth/login` in Swagger with the seed credentials.
+> 2. Copy the `accessToken`.
+> 3. Click the green **Authorize** button at the top of the Swagger page.
+> 4. Paste the token into the `bearerAuth` field.
+> 5. You can now execute all protected `/api/v1/entries`, `/api/v1/tags`, and `/api/v1/analytics` requests directly from the UI!
+
+---
+
 ## 🔑 Default Personal Seed Account
 
 On startup, if no records exist, the database automatically initializes your personal account with sample problems, solutions, and tags ready for daily use:
@@ -65,6 +81,8 @@ probsol.seed.display-name=Anuj Tiwari
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
+| `GET` | `/` | Public | Welcome status message |
+| `GET` | `/api/v1/health` | Public | Health probe (used by Render) |
 | `POST` | `/api/v1/auth/register` | Public | Register new user |
 | `POST` | `/api/v1/auth/login` | Public | Authenticate user & issue tokens |
 | `POST` | `/api/v1/auth/refresh` | Public / Cookie | Rotate refresh token & issue new access token |

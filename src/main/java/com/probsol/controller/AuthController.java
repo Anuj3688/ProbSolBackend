@@ -8,6 +8,8 @@ import com.probsol.dto.response.RefreshTokenResponse;
 import com.probsol.dto.response.UserResponse;
 import com.probsol.security.UserPrincipal;
 import com.probsol.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication", description = "Endpoints for user registration, authentication, and session management")
 public class AuthController {
 
     private final AuthService authService;
@@ -27,6 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Register a new user account")
     public ResponseEntity<ApiResponse<AuthResponse>> register(
             @Valid @RequestBody RegisterRequest request,
             HttpServletResponse response) {
@@ -35,6 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Authenticate user and issue JWT + refresh cookie")
     public ResponseEntity<ApiResponse<AuthResponse>> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
@@ -43,6 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
+    @Operation(summary = "Rotate refresh token and issue a fresh access token")
     public ResponseEntity<ApiResponse<RefreshTokenResponse>> refresh(
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -51,6 +57,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Revoke session and clear refresh cookie")
     public ResponseEntity<ApiResponse<Void>> logout(
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -59,6 +66,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+    @Operation(summary = "Get current authenticated user profile")
     public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser(
             @AuthenticationPrincipal UserPrincipal principal) {
         UserResponse user = authService.getCurrentUser(principal);
