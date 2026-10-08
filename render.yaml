@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: probsol-backend
+    env: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    autoDeploy: true
+    healthCheckPath: /api/v1/auth/me
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CORS_ALLOWED_ORIGINS
+        value: "http://localhost:3000,http://localhost:5173"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SEED_ENABLED
+        value: "true"
+      - key: SEED_EMAIL
+        value: "anuj@probsol.dev"
+      - key: SEED_PASSWORD
+        value: "Password123!"
+      - key: SEED_DISPLAY_NAME
+        value: "Anuj Tiwari"
